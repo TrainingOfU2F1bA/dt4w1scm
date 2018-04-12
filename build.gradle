@@ -29,10 +29,14 @@ repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     mavenLocal()
-    jcenter()
-    maven { url 'http://repo.spring.io/plugins-release' }
-    maven { url 'http://repo.spring.io/milestone' }
-    maven { url "https://plugins.gradle.org/m2/" }
+//    jcenter()
+    maven{
+        name 'aliyun'
+        url 'http://maven.aliyun.com/nexus/content/repositories/central/'
+    }
+//    maven { url 'http://repo.spring.io/plugins-release' }
+//    maven { url 'http://repo.spring.io/milestone' }
+//    maven { url "https://plugins.gradle.org/m2/" }
 }
 
 dependencies {
