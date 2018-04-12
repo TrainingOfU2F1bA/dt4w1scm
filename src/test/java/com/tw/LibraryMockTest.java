@@ -5,7 +5,6 @@ import com.tw.io.LibraryReader;
 import com.tw.io.StudentInfoPrinter;
 import com.tw.io.StudentInfoReader;
 import com.tw.service.StudentService;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
