@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface StudentRepositories {
     public void saveStudent(Student student);
-    public List<Student> findStudent(List<Integer> nums);
+    public List<Student> findStudent(List<String> nums);
 }
