@@ -1,5 +1,6 @@
 package com.tw.io;
 
+import com.tw.Library;
 import org.hamcrest.core.IsEqual;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,5 +29,7 @@ public class LibraryIOTest {
         System.setIn(new ByteArrayInputStream("Student".getBytes()));
         LibraryReader reader = new LibraryReader();
         assertThat(reader.read(),new IsEqual("Student"));
+        System.setIn(new ByteArrayInputStream("1".getBytes()));
+        assertThat(reader.readInt(),new IsEqual(1));
     }
 }

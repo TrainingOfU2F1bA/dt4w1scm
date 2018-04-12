@@ -7,4 +7,9 @@ public class LibraryReader {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
+
+    public int readInt() {
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextInt();
+    }
 }
