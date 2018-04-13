@@ -1,21 +1,18 @@
 package com.tw.io;
 
-import com.tw.Library;
 import com.tw.bean.Student;
-import jdk.nashorn.internal.runtime.Source;
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
+import com.tw.repository.StudentRepositories;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class StudentInfoReaderImpl implements StudentInfoReader {
     SystemHintPrinter systemHintPrinter;
     LibraryReader libraryReader;
+    private StudentRepositories repositories;
 
     public LibraryReader getLibraryReader() {
         return libraryReader;
@@ -31,6 +28,14 @@ public class StudentInfoReaderImpl implements StudentInfoReader {
 
     public void setSystemHintPrinter(SystemHintPrinter systemHintPrinter) {
         this.systemHintPrinter = systemHintPrinter;
+    }
+
+    public StudentRepositories getRepositories() {
+        return repositories;
+    }
+
+    public void setRepositories(StudentRepositories repositories) {
+        this.repositories = repositories;
     }
 
     @Override
@@ -55,7 +60,15 @@ public class StudentInfoReaderImpl implements StudentInfoReader {
 
     @Override
     public List<Student> readNumsofStudent() {
-        return null;
+        systemHintPrinter.hintInputNumofStudent();
+        Pattern pattern = Pattern.compile("\\(([0-9]*,)+([0-9]*)\\)");
+        while (true) {
+            String read = libraryReader.read();
+            if (pattern.matcher(read).matches()) {
+                List<String> collect = Arrays.stream(read.replaceAll("\\(|\\)", "").split(",")).collect(Collectors.toList());
+                return repositories.findStudent(collect);
+            }else systemHintPrinter.warningInputRightFormatNumofStudent();
+        }
     }
 
 }
