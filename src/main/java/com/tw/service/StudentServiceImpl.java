@@ -5,7 +5,9 @@ import com.tw.repository.StudentRepositories;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StudentServiceImpl implements StudentService {
     private StudentRepositories studentRepositories;
@@ -30,31 +32,58 @@ public class StudentServiceImpl implements StudentService {
         if (studentRepositories != null) {
             studentRepositories.saveStudent(student);
             return true;
-        } else return false;
+        }
+        return false;
     }
 
     @Override
     public List<String> generateReportList(List<Student> students) {
-        List<String> strings = students.stream().map(
-                x -> x.getName()
-                        + "|" + x.getMap().values().stream().map(m -> m.toString()).reduce((a, b) -> a + "|" + b).get()
-                        + "|" + x.getMap().values().stream().reduce((a, b) -> a + b).get()).collect(Collectors.toList()
-        );
-        String course = "姓名|" + students.stream().map(x -> x.getMap().keySet().stream().reduce((a, b) -> a + "|" + b).get()+"|总分").collect(Collectors.toList()).get(0);
-        int n = students.get(0).getMap().size() * students.size();
-        int avg = students.stream().map(x -> x.getMap().values().stream().reduce((a, b) -> a + b).get()).reduce((a, b) -> a + b).get() / n;
-        int max = students.stream().map(x -> x.getMap().values().stream().reduce((a, b) -> a > b ? a : b).get()).reduce((a, b) -> a > b ? a : b).get();
-        int min = students.stream().map(x -> x.getMap().values().stream().reduce((a, b) -> a < b ? a : b).get()).reduce((a, b) -> a < b ? a : b).get();
-        int mid = (max + min) / 2;
         ArrayList<String> list = new ArrayList<>();
+        String tableHeader = getTableHeader(students);
+        List<String> studentScoreTable = getStudentScoreTable(students);
         list.add("成绩单");
-//        list.add("姓名|数学|语文|英语|编程|平均分|总分");
-        list.add(course);
-        list.add(course.replaceAll(".","="));
-        strings.stream().forEach(x -> list.add(x));
-        list.add(course.replaceAll(".","="));
-        list.add("全班总分平均数：" + avg);
-        list.add("全班总分中位数：" + mid);
+        list.add(tableHeader);
+        list.add(tableHeader.replaceAll(".", "="));
+        list.addAll(studentScoreTable);
+        list.add(tableHeader.replaceAll(".", "="));
+        list.add("全班总分平均数：" + getAvg(students, getSubjectQuantity(students) * students.size()));
+        list.add("全班总分中位数：" + (getMax(students) + (int) getMin(students)) / 2);
         return list;
+    }
+
+    private List<String> getStudentScoreTable(List<Student> students) {
+        Function<Student, Stream<Integer>> mapper = x -> x.getMap().values().stream();
+        return students.stream().map(
+                x -> x.getName()
+                        + "|" + mapper.apply(x).map(m -> m.toString()).reduce((a, b) -> a + "|" + b).get()
+                        + "|" + mapper.apply(x).reduce((a, b) -> a + b).get()).collect(Collectors.toList()
+        );
+    }
+
+    private String getTableHeader(List<Student> students) {
+        return "姓名|" + students.stream().map(x -> getCourseNameList(x).reduce((a, b) -> a + "|" + b).get() + "|总分").collect(Collectors.toList()).get(0);
+    }
+
+    public Stream<String> getCourseNameList(Student x) {
+        return x.getMap().keySet().stream();
+    }
+
+    public int getSubjectQuantity(List<Student> students) {
+        return students.get(0).getMap().size();
+    }
+
+    public Integer getMin(List<Student> students) {
+        Function<Student, Stream<? extends Integer>> mapper = x -> x.getMap().values().stream();
+        return students.stream().flatMap(mapper).reduce((a, b) -> a < b ? a : b).get();
+    }
+
+    public Integer getMax(List<Student> students) {
+        Function<Student, Stream<? extends Integer>> mapper = x -> x.getMap().values().stream();
+        return students.stream().flatMap(mapper).reduce((a, b) -> a > b ? a : b).get();
+    }
+
+    public int getAvg(List<Student> students, int n) {
+        Function<Student, Stream<? extends Integer>> mapper = x -> x.getMap().values().stream();
+        return students.stream().flatMap(mapper).reduce((a, b) -> a + b).get() / n;
     }
 }

@@ -1,3 +1,9 @@
+大致结构
+
+![Q图片2018041519413](https://raw.githubusercontent.com/TrainingOfU2F1bA/dt4w1scm/master/img/QQ图片20180415194130.png)
+
+
+
 # Java综合练习
 
 ### 练习描述

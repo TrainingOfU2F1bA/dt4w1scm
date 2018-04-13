@@ -1,13 +1,55 @@
 package com.tw;
 
+import com.tw.bean.Student;
+import com.tw.io.LibraryReader;
+import com.tw.io.StudentInfoPrinter;
+import com.tw.io.StudentInfoReader;
+import com.tw.io.SystemHintPrinter;
+import com.tw.service.StudentService;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class LibraryTest {
+
+    private StudentInfoReader studentInfoReader;
+    private StudentInfoPrinter studentInfoPrinter;
+    private LibraryReader libraryReader;
+    private StudentService studentService;
+    private Library library;
+    private SystemHintPrinter systemHintPrinter;
+
+    @Before
+    public void setUp() throws Exception {
+        studentInfoPrinter = mock(StudentInfoPrinter.class);
+        studentInfoReader = mock(StudentInfoReader.class);
+        libraryReader = mock(LibraryReader.class);
+        studentService = mock(StudentService.class);
+        systemHintPrinter = mock(SystemHintPrinter.class);
+        library = new Library(studentInfoPrinter, studentInfoReader, libraryReader, studentService, systemHintPrinter);
+    }
+
+    @Test
+    public void testMainLoop() {
+        Student student = mock(Student.class);
+        ArrayList<Student> students = mock(ArrayList.class);
+        students.add(student);
+        ArrayList<String> strings = mock(ArrayList.class);
+        when(libraryReader.readInt()).thenReturn(1, 2, 2, 3);
+        when(studentInfoReader.readStudentInfo()).thenReturn(student);
+        when(studentService.saveStudent(student)).thenReturn(true);
+        when(studentInfoReader.readNumsofStudent()).thenReturn(students);
+        when(studentService.generateReportList(students)).thenReturn(strings);
+        library.systemBootUp();
+        verify(systemHintPrinter, times(1)).hintUsertoChooseModule();
+        verify(studentInfoReader, times(1)).readStudentInfo();
+        verify(studentService, times(1)).saveStudent(student);
+        verify(studentInfoReader, times(2)).readNumsofStudent();
+        verify(studentService, times(2)).generateReportList(students);
+        verify(studentInfoPrinter, times(2)).printScoreReport(strings);
+        verify(systemHintPrinter, times(3)).hintUsertoChooseModule2();
+    }
 }

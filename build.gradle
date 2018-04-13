@@ -13,8 +13,21 @@ apply plugin: 'jacoco'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-
-
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+sourceSets {
+    main{
+        java{
+            srcDirs(['src/main/interface','src/main/java'])
+        }
+    }
+    test{
+        java{
+            srcDir('src/test/java')
+        }
+    }
+}
 jacocoTestReport {
   reports {
     xml.enabled false

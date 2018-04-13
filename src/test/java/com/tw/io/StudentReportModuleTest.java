@@ -1,9 +1,7 @@
 package com.tw.io;
 
-import com.sun.xml.internal.ws.policy.AssertionSet;
 import com.tw.bean.Student;
 import com.tw.repository.StudentRepositories;
-import com.tw.repository.StudentRepositoriesImpl;
 import com.tw.service.StudentService;
 import com.tw.service.StudentServiceImpl;
 import org.junit.Assert;
@@ -12,7 +10,6 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

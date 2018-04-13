@@ -1,13 +1,14 @@
 package com.tw.io;
 
-import com.tw.Library;
 import org.hamcrest.core.IsEqual;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class LibraryIOTest {
